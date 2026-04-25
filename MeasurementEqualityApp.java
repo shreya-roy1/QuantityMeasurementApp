@@ -2,6 +2,7 @@ package com.apps.quantitymeasurement;
 
 public class MeasurementEqualityApp {
 
+    // Class for Feet measurement
     public static class FeetMeasurement {
         private final double value;
 
@@ -24,6 +25,7 @@ public class MeasurementEqualityApp {
         }
     }
 
+    // Class for Inches measurement
     public static class InchesMeasurement {
         private final double value;
 
@@ -46,6 +48,7 @@ public class MeasurementEqualityApp {
         }
     }
 
+    // Method to test Feet
     public static void checkFeetEquality() {
         FeetMeasurement f1 = new FeetMeasurement(1.0);
         FeetMeasurement f2 = new FeetMeasurement(1.0);
@@ -56,6 +59,7 @@ public class MeasurementEqualityApp {
         System.out.println("1.0 ft == 2.0 ft → " + f1.equals(f3));
     }
 
+    // Method to test Inches
     public static void checkInchesEquality() {
         InchesMeasurement i1 = new InchesMeasurement(1.0);
         InchesMeasurement i2 = new InchesMeasurement(1.0);
@@ -66,6 +70,7 @@ public class MeasurementEqualityApp {
         System.out.println("1.0 in == 2.0 in → " + i1.equals(i3));
     }
 
+    // Main method
     public static void main(String[] args) {
         checkFeetEquality();
         checkInchesEquality();
