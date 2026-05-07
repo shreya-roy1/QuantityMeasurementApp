@@ -96,3 +96,5 @@ No changes to Quantity<U>, test infrastructure, or QuantityMeasurementApp
 Maintenance burden is significantly reduced; changes are localized.
 Code complexity scales linearly rather than exponentially.
 Type safety is enhanced through generics and bounded type parameters.
+ent categories without refactoring existing code.
+- Code cohesion is improved; unit-specific logic is centralized in the unit class.
