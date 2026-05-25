@@ -39,3 +39,9 @@ For the Volume category, we support Litres, Millilitres, and Gallons.
   - `GALLON` = 3.78541 L
 
 All volume operations resolve to `LITRE` internally.
+
+## 🔒 Type-Safety via Java Generics
+To prevent logic errors like comparing Length to Volume (e.g., `1 ft == 1 L`), the core class uses a generic type parameter:
+`public class GenericQuantity<U extends IMeasurable>`
+
+Because `LengthUnit` and `VolumeUnit` are separate enums implementing `IMeasurable`, a `GenericQuantity<LengthUnit>` cannot be compared or added to a `GenericQuantity<VolumeUnit>`. This ensures type safety at compile time.
