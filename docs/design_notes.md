@@ -19,3 +19,13 @@ For the Length category, we require conversion and comparison between Feet, Inch
   - `CENTIMETER` = 0.4 inches (approximate mapping)
 
 All length comparison values are normalized to the base unit `INCH` before comparison.
+
+## ⚖️ Weight Conversion Engine
+For the Weight category, we need support for Kilograms, Grams, and Pounds.
+- **Base Unit**: `KILOGRAM` (1.0)
+- **Conversion Factors**:
+  - `KILOGRAM` = 1.0 kg
+  - `GRAM` = 0.001 kg
+  - `POUND` = 0.453592 kg
+
+All weight calculations and equality comparisons normalize to `KILOGRAM` first.
