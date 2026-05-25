@@ -29,3 +29,13 @@ For the Weight category, we need support for Kilograms, Grams, and Pounds.
   - `POUND` = 0.453592 kg
 
 All weight calculations and equality comparisons normalize to `KILOGRAM` first.
+
+## 🧪 Volume Conversion Engine
+For the Volume category, we support Litres, Millilitres, and Gallons.
+- **Base Unit**: `LITRE` (1.0)
+- **Conversion Factors**:
+  - `LITRE` = 1.0 L
+  - `MILLILITRE` = 0.001 L
+  - `GALLON` = 3.78541 L
+
+All volume operations resolve to `LITRE` internally.
