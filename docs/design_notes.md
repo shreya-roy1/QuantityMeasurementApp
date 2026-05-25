@@ -45,3 +45,10 @@ To prevent logic errors like comparing Length to Volume (e.g., `1 ft == 1 L`), t
 `public class GenericQuantity<U extends IMeasurable>`
 
 Because `LengthUnit` and `VolumeUnit` are separate enums implementing `IMeasurable`, a `GenericQuantity<LengthUnit>` cannot be compared or added to a `GenericQuantity<VolumeUnit>`. This ensures type safety at compile time.
+
+## ➕ Comprehensive Arithmetic
+The application supports standard addition and subtraction operations within the same category:
+- Result values default to the unit of the first operand if no target unit is specified.
+- The caller can explicitly pass a target unit (e.g., adding `1 ft` and `12 in`, returning the result in `YARDS`).
+
+Additionally, a division method `ratio(GenericQuantity<U> other)` computes the scalar ratio between two values of the same category (e.g., `1 Litre / 250 ml = 4.0`), producing a dimensionless result.
