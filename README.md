@@ -93,6 +93,14 @@ Example:
 
 ---
 
+### 🔹 UC10 – Generic Quantity Architecture Refactoring
+
+- Refactors the application using a generic:
+  ```java
+  Quantity<U extends IMeasurable>
+
+---
+
 ## 📚 Key Learnings
 - Proper implementation of equals() method
 - Handling floating-point precision
