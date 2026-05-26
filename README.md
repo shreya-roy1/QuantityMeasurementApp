@@ -110,6 +110,16 @@ Example:
  
 ---
 
+🧪 Key Features Tested
+- Cross-unit equality (kg ↔ g ↔ lb)
+- Conversion accuracy
+- Addition with implicit & explicit target units
+- Commutativity
+- Edge cases (zero, negative, large values)
+- Category incompatibility
+
+---
+
 ## 💡 Key Idea
 The project shows improvement from:
 - Basic comparison → Multiple units → Clean and reusable design
