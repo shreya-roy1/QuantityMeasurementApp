@@ -101,6 +101,18 @@ Example:
 
 ---
 
+🔹 UC11 – Volume Measurement Support
+- Adds Volume measurement category to the system.
+- Supports:
+1.Litres
+2.Millilitres
+3.Gallons
+- Enables equality, conversion, and addition operations for volume units.
+- Uses the same generic Measurement<U> architecture from UC10.
+- No changes required in core logic or existing infrastructure.
+
+---
+
 ## 📚 Key Learnings
 - Proper implementation of equals() method
 - Handling floating-point precision
