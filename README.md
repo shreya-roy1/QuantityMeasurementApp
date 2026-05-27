@@ -14,7 +14,6 @@ ent categories without refactoring existing code.
 Example:  
 `1.0 ft == 1.0 ft → true`
 
-
 ### 🔹 UC2: Feet & Inches Equality
 - Adds support for **inches**
 - Feet and Inches are handled **separately**
@@ -22,7 +21,7 @@ Example:
 Example:  
 `1.0 ft == 1.0 ft → true`  
 `1.0 in == 1.0 in → true`
-
+<br>
 
 ### 🔹 UC3: Quantity Length Equality (Optimized)
 - Uses a **single class + enum**
@@ -127,5 +126,4 @@ Example:
 ## 💡 Key Idea
 The project shows improvement from:
 - Basic comparison → Multiple units → Clean and reusable design
-
----
+  
