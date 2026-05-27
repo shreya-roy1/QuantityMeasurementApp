@@ -131,9 +131,3 @@ Example:
 - Category incompatibility
 
 ---
-
-## 💡 Key Idea
-The project shows improvement from:
-- Basic comparison → Multiple units → Clean and reusable design
-
----
