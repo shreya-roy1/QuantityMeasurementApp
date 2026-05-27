@@ -59,6 +59,7 @@ Example:
 ### 🔹 UC6 – Addition of Lengths
 - Adds two measurements (same/different units)
 - Result returned in unit of first operand
+  
 Example:
 `1 ft + 12 in = 2 ft`
 - Maintains immutability and accuracy
@@ -67,6 +68,7 @@ Example:
 
 ### 🔹 UC7 – Addition with Target Unit
 - Allows explicit target unit for result
+  
 Example:
 `1 ft + 12 in → YARDS = 0.667 yd`
 - Provides flexibility in output representation
