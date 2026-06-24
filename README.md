@@ -92,7 +92,7 @@ Example:
   Quantity<U extends IMeasurable>
 
 
-🔹 UC11 – Volume Measurement Support
+### 🔹 UC11 – Volume Measurement Support
 - Adds Volume measurement category to the system.
 - Supports:
 1.Litres
@@ -101,6 +101,16 @@ Example:
 - Enables equality, conversion, and addition operations for volume units.
 - Uses the same generic Measurement<U> architecture from UC10.
 - No changes required in core logic or existing infrastructure.
+
+
+### 🔹 UC12 – Subtraction & Division with Target Unit
+- Allows explicit target unit for subtraction and returns dimensionless scalar for division
+
+Example:
+`10 ft - 6 in → INCHES = 114.0 in
+2 kg ÷ 500 g = 4.0`
+
+- Provides comprehensive mathematical manipulation while ensuring strict type safety
 
 ---
 
