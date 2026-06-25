@@ -14,6 +14,8 @@ ent categories without refactoring existing code.
 Example:  
 `1.0 ft == 1.0 ft → true`
 
+---
+
 ### 🔹 UC2: Feet & Inches Equality
 - Adds support for **inches**
 - Feet and Inches are handled **separately**
@@ -21,7 +23,8 @@ Example:
 Example:  
 `1.0 ft == 1.0 ft → true`  
 `1.0 in == 1.0 in → true`
-<br>
+
+---
 
 ### 🔹 UC3: Quantity Length Equality (Optimized)
 - Uses a **single class + enum**
@@ -32,6 +35,7 @@ Example:
 Example:  
 `1 ft == 12 in → true`
 
+---
 
 ### 🔹 UC4 – Adding More Units (Yards & Centimeters)
 - Introduces **YARDS** and **CENTIMETERS** into the system.
@@ -40,6 +44,7 @@ Example:
   - Feet ↔ Inches ↔ Yards ↔ Centimeters
 - No changes needed in core logic (only enum updated).
 
+---
 
 ### 🔹 UC5 – Unit Conversion API
 - Adds a conversion method:
@@ -49,6 +54,7 @@ Example:
 - Uses base unit normalization
 - Handles edge cases (NaN, infinity, etc.)
   
+---
 
 ### 🔹 UC6 – Addition of Lengths
 - Adds two measurements (same/different units)
@@ -58,6 +64,7 @@ Example:
 `1 ft + 12 in = 2 ft`
 - Maintains immutability and accuracy
 
+---
 
 ### 🔹 UC7 – Addition with Target Unit
 - Allows explicit target unit for result
@@ -66,6 +73,7 @@ Example:
 `1 ft + 12 in → YARDS = 0.667 yd`
 - Provides flexibility in output representation
 
+---
 
 ### 🔹 UC8 – Architectural Refactoring
 - Extracts LengthUnit into a standalone enum
@@ -75,6 +83,7 @@ Example:
  2. Maintainability
  3. Scalability for future categories (Weight, Volume)
 
+---
 
 ### 🔹 UC9 - Adding Weight Measurement
 - Introduced new category: Weight
@@ -84,13 +93,15 @@ Example:
 2.Conversion
 3.Addition
 
+---
 
 ### 🔹 UC10 – Generic Quantity Architecture Refactoring
 
 - Refactors the application using a generic:
   ```java
   Quantity<U extends IMeasurable>
-
+  
+---
 
 ### 🔹 UC11 – Volume Measurement Support
 - Adds Volume measurement category to the system.
@@ -102,6 +113,7 @@ Example:
 - Uses the same generic Measurement<U> architecture from UC10.
 - No changes required in core logic or existing infrastructure.
 
+---
 
 ### 🔹 UC12 – Subtraction & Division with Target Unit
 - Allows explicit target unit for subtraction and returns dimensionless scalar for division
