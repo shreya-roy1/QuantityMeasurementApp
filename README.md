@@ -1,3 +1,5 @@
+# Quantity Measurement App
+
 UC13 refactors the arithmetic operations (addition, subtraction, division) implemented in UC12 to eliminate code duplication and enforce the DRY (Don't Repeat Yourself) principle. Instead of repeating unit conversion, base-unit normalization, and validation logic across multiple arithmetic methods, this use case introduces a centralized private helper method that encapsulates all common arithmetic logic.
 
 
@@ -5,13 +7,12 @@ By consolidating the repetitive code into a single, reusable helper method, UC13
 
 
 
-Disadvantages of UC12 Implementation
+### Disadvantages of UC12 Implementation
+
+-> UC12's direct implementation of arithmetic operations exhibits several architectural flaws:
 
 
-UC12's direct implementation of arithmetic operations exhibits several architectural flaws:
-
-
-Code Duplication Across Arithmetic Methods
+-> Code Duplication Across Arithmetic Methods
 
 add(), subtract(), and divide() each contain nearly identical code:
 Null checks for operand and unit
@@ -23,47 +24,46 @@ Explicit target unit handling
 Any of these checks present in all three methods with minimal variation.
 Future arithmetic operations (multiplication, modulo, etc.) would duplicate this pattern further.
 
-DRY Principle Violation
+-> DRY Principle Violation
 
 Common validation logic is copied verbatim across methods.
 Error messages and validation checks are not centralized.
 Changes to validation rules require updates in multiple locations.
 Inconsistencies between methods become possible (e.g., one method uses different null-check behavior).
 
-Increased Maintenance Burden
+-> Increased Maintenance Burden
 
 Bug fixes or improvements to conversion logic must be applied in three+ places.
 Risk of partial updates (fixing one method while missing others).
 Refactoring becomes complex as changes ripple across multiple methods.
 New developers struggle to understand why logic is repeated.
 
-Reduced Code Readability
+-> Reduced Code Readability
 
 Length of each arithmetic method obscures the core operation logic.
 Readers must parse validation/conversion boilerplate before understanding the actual arithmetic.
 Intent of the method is buried in repetitive code.
 
-Scalability Issues
+-> Scalability Issues
 
 Adding multiplication, modulo, or other operations compounds duplication.
 Validation and conversion logic would be replicated 5+, 6+, 7+ times.
 Codebase grows unnecessarily; complexity increases without adding functionality.
 
-Inconsistent Error Handling
+-> Inconsistent Error Handling
 
 Each method might handle errors slightly differently.
 Some might throw exceptions; others return special values.
 No centralized place to adjust error-handling strategy.
 
-Testing Complexity
+-> Testing Complexity
 
 Validation scenarios must be tested separately for each operation.
 Tests for add(), subtract(), and divide() contain nearly identical test cases.
 Bug fixes or validation changes require updating tests in multiple locations.
 
 
-Preconditions
-
+### Preconditions
 
 All arithmetic operations from UC12 (add, subtract, divide) are fully functional and tested.
 All unit enums (LengthUnit, WeightUnit, VolumeUnit, etc.) implement IMeasurable.
