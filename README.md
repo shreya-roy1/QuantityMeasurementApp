@@ -5,7 +5,7 @@
 [![Design Patterns](https://img.shields.io/badge/Design%20Patterns-Polymorphic%20Enum%20%7C%20Strategy-brightgreen.svg?style=flat-square)](#-design-decisions--patterns)
 [![Testing](https://img.shields.io/badge/Testing-JUnit%205-red.svg?style=flat-square)](#-verification--testing)
 
-An elegant, type-safe, and highly extensible Java-based measurement conversion and arithmetic engine. Designed with strict object-oriented and SOLID principles, the application supports comparing, converting, and performing arithmetic operations across **Length**, **Weight**, and **Volume** domains while guaranteeing compile-time safety and physical consistency.
+An elegant, type-safe, and highly extensible Java-based measurement conversion and arithmetic engine. Designed with strict object-oriented design and SOLID principles, the application supports comparing, converting, and performing arithmetic operations across **Length**, **Weight**, and **Volume** domains while guaranteeing compile-time safety and physical consistency.
 
 ---
 
@@ -16,6 +16,7 @@ An elegant, type-safe, and highly extensible Java-based measurement conversion a
 *   ➕➖➗ **Comprehensive Arithmetic**: Implements Addition, Subtraction (with target unit specification), and Division (calculating dimensionless scalar ratios).
 *   🛡️ **Immutable Design**: Instances of measurements are immutable to prevent unintended side effects and ensure thread safety.
 *   🧩 **Polymorphic Enums**: Leverages Java enums implementing strategy interfaces to encapsulate unit conversion factors cleanly.
+*   ⚡ **DRY Refactoring**: Centralized validation, unit scaling, and operator logic using Java's functional `DoubleBinaryOperator` interface to maximize maintainability.
 
 ---
 
@@ -31,6 +32,7 @@ The architecture decouples the physical quantity logic from the specific unit im
 
 ```mermaid
 classDiagram
+    direction TB
     class IMeasurable {
         <<interface>>
         +convertToBaseUnit(double value) double
@@ -151,6 +153,70 @@ Refactors the arithmetic logic to eliminate code duplication across operations. 
 
 ---
 
+## 🧩 Under the Hood: UC13 Refactoring Deep Dive
+
+Prior to UC13, arithmetic methods (`add`, `subtract`, `divide`) contained duplicate logic for verifying operand nullability, checking physical dimensions (e.g. preventing adding Length to Weight), scaling values to base units, and wrapping outputs. 
+
+To resolve this, UC13 introduced:
+1. **Centralized Validator**: Enforces category similarity, non-null values, and input finiteness uniformly.
+2. **Centralized Base Arithmetic Runner**: Converts inputs to base units, performs calculation, and outputs the base result.
+3. **Polymorphic Enum with Functional Lambdas**: Decouples mathematical operators into a concise, decoupled enum structure.
+
+```java
+private enum ArithmeticOperation {
+    ADD((a, b) -> a + b),
+    SUBTRACT((a, b) -> a - b),
+    DIVIDE((a, b) -> {
+        if (b == 0.0) {
+            throw new ArithmeticException("Division by zero is not allowed.");
+        }
+        return a / b;
+    });
+
+    private final DoubleBinaryOperator operator;
+
+    ArithmeticOperation(DoubleBinaryOperator operator) {
+        this.operator = operator;
+    }
+
+    public double compute(double baseValue1, double baseValue2) {
+        return operator.applyAsDouble(baseValue1, baseValue2);
+    }
+}
+```
+
+---
+
+## 🔌 Extensibility Walkthrough: Adding a New Category
+
+Adding a new measurement category (e.g., **Temperature**) requires zero changes to the core `Quantity` class:
+
+1. **Create the Enum**: Define the unit enum (e.g., `TemperatureUnit`) implementing `IMeasurable`.
+2. **Implement Ratios/Conversions**:
+   ```java
+   public enum TemperatureUnit implements IMeasurable<TemperatureUnit> {
+       CELSIUS, FAHRENHEIT;
+       
+       @Override
+       public double convertToBaseUnit(double value) {
+           return (this == FAHRENHEIT) ? (value - 32) * 5/9 : value; // Celsius as Base
+       }
+       
+       @Override
+       public double convertFromBaseUnit(double baseValue) {
+           return (this == FAHRENHEIT) ? (baseValue * 9/5) + 32 : baseValue;
+       }
+   }
+   ```
+3. **Instantiate and Execute**:
+   ```java
+   Quantity<TemperatureUnit> bodyTemp = new Quantity<>(37.0, TemperatureUnit.CELSIUS);
+   Quantity<TemperatureUnit> fahrenheitTemp = new Quantity<>(98.6, TemperatureUnit.FAHRENHEIT);
+   boolean equal = bodyTemp.equals(fahrenheitTemp); // Returns true!
+   ```
+
+---
+
 ## 💻 Code Usage Examples
 
 ### 1. Creating Quantities & Type-Safe Operations
@@ -208,7 +274,7 @@ double ratio = oneLitre.divide(quarterLitre); // Result: 4.0
 ## 💡 Design Decisions & Patterns
 
 *   **Strategy Pattern**: Unit enums act as strategies for conversion. The `IMeasurable` interface defines the conversion algorithms, and each enum constant defines its unique factor/formula.
-*   **Open/Closed Principle (OCP)**: Adding new categories (e.g., Temperature, Speed) is done by creating a new enum implementing `IMeasurable`. No changes to `Quantity` are needed.
+*   **Open/Closed Principle (OCP)**: Adding new categories (e.g. Temperature, Speed) is done by creating a new enum implementing `IMeasurable`. No changes to `Quantity` are needed.
 *   **Liskov Substitution Principle (LSP)**: Any unit category enum implementing `IMeasurable` can be substituted dynamically into `Quantity<U>`.
 *   **Single Responsibility Principle (SRP)**:
     *   `Quantity` is responsible only for handling quantity values and arithmetic operations.
