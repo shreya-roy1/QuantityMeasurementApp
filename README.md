@@ -24,7 +24,7 @@ An elegant, type-safe, and highly extensible Java-based measurement conversion a
 The architecture decouples the physical quantity logic from the specific unit implementation. The core components are:
 
 1.  **`IMeasurable`** (Interface): Defines the contract for all unit enums. It encapsulates the conversion logic to and from a category's base unit.
-2.  **`GenericQuantity<U extends IMeasurable>`** (Class): A generic container holding a numeric value and its corresponding unit. It handles equality checks, unit conversion, addition, subtraction, and ratio calculations.
+2.  **`Quantity<U extends Enum<U> & IMeasurable<U>>`** (Class): A generic container holding a numeric value and its corresponding unit. It handles equality checks, addition, subtraction, and division calculations.
 3.  **Unit Enums** (`LengthUnit`, `WeightUnit`, `VolumeUnit`): Concrete enums that implement `IMeasurable` and manage unit-specific factors.
 
 ### Class Diagram
@@ -38,16 +38,15 @@ classDiagram
         +getUnitName() String
     }
     
-    class GenericQuantity~U extends IMeasurable~ {
+    class Quantity~U extends Enum~U~ & IMeasurable~U~~ {
         -double value
         -U unit
-        +GenericQuantity(double value, U unit)
-        +convertTo(U targetUnit) GenericQuantity~U~
-        +add(GenericQuantity~U~ other) GenericQuantity~U~
-        +add(GenericQuantity~U~ other, U targetUnit) GenericQuantity~U~
-        +minus(GenericQuantity~U~ other) GenericQuantity~U~
-        +minus(GenericQuantity~U~ other, U targetUnit) GenericQuantity~U~
-        +ratio(GenericQuantity~U~ other) double
+        +Quantity(double value, U unit)
+        +add(Quantity~U~ other) Quantity~U~
+        +add(Quantity~U~ other, U targetUnit) Quantity~U~
+        +subtract(Quantity~U~ other) Quantity~U~
+        +subtract(Quantity~U~ other, U targetUnit) Quantity~U~
+        +divide(Quantity~U~ other) double
         +equals(Object o) boolean
         +hashCode() int
         +toString() String
@@ -78,7 +77,7 @@ classDiagram
     IMeasurable <|.. LengthUnit
     IMeasurable <|.. WeightUnit
     IMeasurable <|.. VolumeUnit
-    GenericQuantity --> IMeasurable : uses
+    Quantity --> IMeasurable : uses
 ```
 
 ---
@@ -95,7 +94,7 @@ Each category uses a specific **Base Unit** to which all other units are normali
 
 ---
 
-## 🚀 Use Case Progression (UC1 - UC12)
+## 🚀 Use Case Progression (UC1 - UC13)
 
 The application was developed incrementally following test-driven development (TDD):
 
@@ -146,6 +145,10 @@ Leverages the generic architecture to seamlessly add `LITRE`, `MILLILITRE`, and 
 Completes the arithmetic suite by supporting subtraction (with custom target units) and division (returning a dimensionless scalar ratio).
 *   *Example:* `1.0 Litre - 250 ml = 0.75 Litre`, `1.0 Litre / 250 ml = 4.0` (Scalar ratio)
 
+### 🔹 UC13: DRY Refactoring & Centralized Arithmetic
+Refactors the arithmetic logic to eliminate code duplication across operations. Exposes a cleaner `Quantity` class utilizing a central validation helper and an internal `ArithmeticOperation` enum powered by functional `DoubleBinaryOperator` lambdas.
+*   *Example:* `1.0 ft + 12.0 in = 2.0 ft` (Delegated to a centralized arithmetic runner with strict category and null validations).
+
 ---
 
 ## 💻 Code Usage Examples
@@ -154,15 +157,15 @@ Completes the arithmetic suite by supporting subtraction (with custom target uni
 
 ```java
 // Length Quantities
-GenericQuantity<LengthUnit> oneFoot = new GenericQuantity<>(1.0, LengthUnit.FEET);
-GenericQuantity<LengthUnit> twelveInches = new GenericQuantity<>(12.0, LengthUnit.INCH);
+Quantity<LengthUnit> oneFoot = new Quantity<>(1.0, LengthUnit.FEET);
+Quantity<LengthUnit> twelveInches = new Quantity<>(12.0, LengthUnit.INCH);
 
 // Weight Quantities
-GenericQuantity<WeightUnit> oneKg = new GenericQuantity<>(1.0, WeightUnit.KILOGRAM);
-GenericQuantity<WeightUnit> thousandGrams = new GenericQuantity<>(1000.0, WeightUnit.GRAM);
+Quantity<WeightUnit> oneKg = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+Quantity<WeightUnit> thousandGrams = new Quantity<>(1000.0, WeightUnit.GRAM);
 ```
 
-### 2. Equality and Conversion
+### 2. Equality
 
 ```java
 // Cross-unit equality (Length)
@@ -170,10 +173,6 @@ boolean lengthsEqual = oneFoot.equals(twelveInches); // returns true
 
 // Cross-unit equality (Weight)
 boolean weightsEqual = oneKg.equals(thousandGrams); // returns true
-
-// Conversion
-GenericQuantity<LengthUnit> converted = twelveInches.convertTo(LengthUnit.FEET);
-System.out.println(converted); // GenericQuantity{value=1.0, unit=FEET}
 ```
 
 ### 3. Compile-Time Safety Guard
@@ -190,18 +189,18 @@ System.out.println(converted); // GenericQuantity{value=1.0, unit=FEET}
 
 ```java
 // Addition (Implicit Target Unit: first operand)
-GenericQuantity<LengthUnit> lengthSum = oneFoot.add(twelveInches); // Result: 2.0 FEET
+Quantity<LengthUnit> lengthSum = oneFoot.add(twelveInches); // Result: 2.0 FEET
 
 // Addition (Explicit Target Unit)
-GenericQuantity<LengthUnit> sumInYards = oneFoot.add(twelveInches, LengthUnit.YARD); // Result: 0.67 YARD
+Quantity<LengthUnit> sumInYards = oneFoot.add(twelveInches, LengthUnit.YARD); // Result: 0.67 YARD
 
 // Subtraction
-GenericQuantity<LengthUnit> lengthDiff = oneFoot.minus(twelveInches); // Result: 0.0 FEET
+Quantity<LengthUnit> lengthDiff = oneFoot.subtract(twelveInches); // Result: 0.0 FEET
 
 // Division/Ratio (Dimensionless Scalar)
-GenericQuantity<VolumeUnit> oneLitre = new GenericQuantity<>(1.0, VolumeUnit.LITRE);
-GenericQuantity<VolumeUnit> quarterLitre = new GenericQuantity<>(250.0, VolumeUnit.MILLILITRE);
-double ratio = oneLitre.ratio(quarterLitre); // Result: 4.0
+Quantity<VolumeUnit> oneLitre = new Quantity<>(1.0, VolumeUnit.LITRE);
+Quantity<VolumeUnit> quarterLitre = new Quantity<>(250.0, VolumeUnit.MILLILITRE);
+double ratio = oneLitre.divide(quarterLitre); // Result: 4.0
 ```
 
 ---
@@ -209,10 +208,10 @@ double ratio = oneLitre.ratio(quarterLitre); // Result: 4.0
 ## 💡 Design Decisions & Patterns
 
 *   **Strategy Pattern**: Unit enums act as strategies for conversion. The `IMeasurable` interface defines the conversion algorithms, and each enum constant defines its unique factor/formula.
-*   **Open/Closed Principle (OCP)**: Adding new categories (e.g., Temperature, Speed) is done by creating a new enum implementing `IMeasurable`. No changes to `GenericQuantity` are needed.
-*   **Liskov Substitution Principle (LSP)**: Any unit category enum implementing `IMeasurable` can be substituted dynamically into `GenericQuantity<U>`.
+*   **Open/Closed Principle (OCP)**: Adding new categories (e.g., Temperature, Speed) is done by creating a new enum implementing `IMeasurable`. No changes to `Quantity` are needed.
+*   **Liskov Substitution Principle (LSP)**: Any unit category enum implementing `IMeasurable` can be substituted dynamically into `Quantity<U>`.
 *   **Single Responsibility Principle (SRP)**:
-    *   `GenericQuantity` is responsible only for handling quantity values and arithmetic operations.
+    *   `Quantity` is responsible only for handling quantity values and arithmetic operations.
     *   Unit Enums (`LengthUnit`, etc.) are responsible only for defining unit conversion factors and labels.
 
 ---
