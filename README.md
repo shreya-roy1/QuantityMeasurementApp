@@ -5,7 +5,7 @@ UC13 refactors the arithmetic operations (addition, subtraction, division) imple
 
 By consolidating the repetitive code into a single, reusable helper method, UC13 improves maintainability, reduces bug risk, and establishes a scalable pattern for adding future arithmetic operations (multiplication, modulo, etc.) without duplicating logic. The public API remains unchanged; all behaviors from UC12 are preserved while the internal implementation is optimized for clarity and consistency.
 
-
+---
 
 ### Disadvantages of UC12 Implementation
 
@@ -62,6 +62,7 @@ Validation scenarios must be tested separately for each operation.
 Tests for add(), subtract(), and divide() contain nearly identical test cases.
 Bug fixes or validation changes require updating tests in multiple locations.
 
+---
 
 ### Preconditions
 
@@ -73,3 +74,5 @@ The refactoring will be internal; public API signatures remain identical.
 A centralized helper method will extract common logic.
 Error handling and validation remain consistent across all operations.
 Refactor will not change public method signatures or results.
+
+---
