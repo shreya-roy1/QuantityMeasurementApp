@@ -1,0 +1,5 @@
+# Java build output
+bin/
+build/
+.gradle/
+*.jar

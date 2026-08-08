@@ -121,12 +121,8 @@ The project has a suite of JUnit 5 unit tests covering:
 
 ### Running Tests
 
-To run the unit test suite locally:
+To run the unit test suite locally, you can use the lightweight PowerShell helper script which downloads JUnit 5 Standalone console launcher, compiles the codebase, and runs all test suites:
 
-```bash
-# If using Gradle
-./gradlew test
-
-# If using Maven
-mvn test
+```powershell
+.\run-tests.ps1
 ```
