@@ -3,6 +3,9 @@ package com.quantity.measurement;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.quantity.measurement.LengthUnit.*;
 import static com.quantity.measurement.WeightUnit.*;
@@ -233,6 +236,59 @@ public class QuantityTest {
             assertThrows(IllegalArgumentException.class, () -> ((Quantity) length).add(weight));
             assertThrows(IllegalArgumentException.class, () -> ((Quantity) length).subtract(weight));
             assertThrows(IllegalArgumentException.class, () -> ((Quantity) length).divide(weight));
+        }
+    }
+
+    @Nested
+    @DisplayName("Quantity Comparison & Natural Ordering")
+    class ComparisonTests {
+        @Test
+        @DisplayName("Compare quantities of same category")
+        void testQuantityComparison() {
+            Quantity<LengthUnit> oneFeet = new Quantity<>(1.0, FEET);
+            Quantity<LengthUnit> tenInches = new Quantity<>(10.0, INCHES);
+            Quantity<LengthUnit> twelveInches = new Quantity<>(12.0, INCHES);
+
+            assertTrue(oneFeet.compareTo(tenInches) > 0);   // 12 inches > 10 inches
+            assertTrue(tenInches.compareTo(oneFeet) < 0);   // 10 inches < 12 inches
+            assertEquals(0, oneFeet.compareTo(twelveInches)); // 12 inches == 12 inches
+        }
+
+        @Test
+        @DisplayName("Comparing mismatched categories throws IllegalArgumentException")
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        void testMismatchedCategoryComparison() {
+            Quantity<LengthUnit> length = new Quantity<>(10.0, FEET);
+            Quantity<WeightUnit> weight = new Quantity<>(10.0, KILOGRAM);
+
+            assertThrows(IllegalArgumentException.class, () -> ((Comparable) length).compareTo(weight));
+        }
+
+        @Test
+        @DisplayName("Comparing with null throws NullPointerException")
+        void testNullComparison() {
+            Quantity<LengthUnit> length = new Quantity<>(10.0, FEET);
+
+            assertThrows(NullPointerException.class, () -> length.compareTo(null));
+        }
+
+        @Test
+        @DisplayName("Sorting quantities using Comparable")
+        void testSortingQuantities() {
+            Quantity<LengthUnit> tenInches = new Quantity<>(10.0, INCHES);
+            Quantity<LengthUnit> oneFeet = new Quantity<>(1.0, FEET);
+            Quantity<LengthUnit> halfYard = new Quantity<>(0.5, YARD); // 18 inches
+
+            List<Quantity<LengthUnit>> list = new ArrayList<>();
+            list.add(halfYard);
+            list.add(tenInches);
+            list.add(oneFeet);
+
+            Collections.sort(list);
+
+            assertEquals(tenInches, list.get(0)); // 10 in
+            assertEquals(oneFeet, list.get(1));    // 12 in
+            assertEquals(halfYard, list.get(2));   // 18 in
         }
     }
 }

@@ -9,7 +9,7 @@ import java.util.function.DoubleBinaryOperator;
  *
  * @param <U> The enum type representing the unit, implementing IMeasurable
  */
-public class Quantity<U extends Enum<U> & IMeasurable<U>> {
+public class Quantity<U extends Enum<U> & IMeasurable<U>> implements Comparable<Quantity<U>> {
 
     private final double value;
     private final U unit;
@@ -170,6 +170,19 @@ public class Quantity<U extends Enum<U> & IMeasurable<U>> {
         double thisBase = this.unit.convertToBaseUnit(this.value);
         double otherBase = ((IMeasurable<?>) other.unit).convertToBaseUnit(other.value);
         return Math.abs(thisBase - otherBase) < 0.01;
+    }
+
+    @Override
+    public int compareTo(Quantity<U> other) {
+        if (other == null) {
+            throw new NullPointerException("Cannot compare to null.");
+        }
+        if (!this.unit.getDeclaringClass().equals(other.unit.getDeclaringClass())) {
+            throw new IllegalArgumentException("Cannot compare across different measurement categories.");
+        }
+        double thisBase = this.unit.convertToBaseUnit(this.value);
+        double otherBase = other.unit.convertToBaseUnit(other.value);
+        return Double.compare(thisBase, otherBase);
     }
 
     @Override
