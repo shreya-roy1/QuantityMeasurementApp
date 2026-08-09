@@ -76,10 +76,10 @@ public class Quantity<U extends Enum<U> & IMeasurable<U>> {
         if (targetUnitRequired && targetUnit == null) {
             throw new IllegalArgumentException("Target unit cannot be null.");
         }
-        if (!this.unit.getClass().equals(other.unit.getClass())) {
+        if (!this.unit.getDeclaringClass().equals(other.unit.getDeclaringClass())) {
             throw new IllegalArgumentException("Cannot perform arithmetic across different measurement categories.");
         }
-        if (targetUnitRequired && !this.unit.getClass().equals(targetUnit.getClass())) {
+        if (targetUnitRequired && !this.unit.getDeclaringClass().equals(targetUnit.getDeclaringClass())) {
             throw new IllegalArgumentException("Target unit belongs to a different measurement category.");
         }
         if (!Double.isFinite(this.value) || !Double.isFinite(other.value)) {
@@ -145,7 +145,7 @@ public class Quantity<U extends Enum<U> & IMeasurable<U>> {
         if (targetUnit == null) {
             throw new IllegalArgumentException("Target unit cannot be null.");
         }
-        if (!this.unit.getClass().equals(targetUnit.getClass())) {
+        if (!this.unit.getDeclaringClass().equals(targetUnit.getDeclaringClass())) {
             throw new IllegalArgumentException("Target unit belongs to a different measurement category.");
         }
         double baseResult = this.unit.convertToBaseUnit(this.value);
@@ -165,7 +165,7 @@ public class Quantity<U extends Enum<U> & IMeasurable<U>> {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Quantity<?> other)) return false;
-        if (!this.unit.getClass().equals(other.unit.getClass())) return false;
+        if (!this.unit.getDeclaringClass().equals(other.unit.getDeclaringClass())) return false;
 
         double thisBase = this.unit.convertToBaseUnit(this.value);
         double otherBase = ((IMeasurable<?>) other.unit).convertToBaseUnit(other.value);
@@ -174,7 +174,7 @@ public class Quantity<U extends Enum<U> & IMeasurable<U>> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(unit.getClass(), unit.convertToBaseUnit(value));
+        return Objects.hash(unit.getDeclaringClass(), unit.convertToBaseUnit(value));
     }
 
     @Override

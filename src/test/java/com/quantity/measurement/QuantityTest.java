@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import static com.quantity.measurement.LengthUnit.*;
 import static com.quantity.measurement.WeightUnit.*;
 import static com.quantity.measurement.VolumeUnit.*;
+import static com.quantity.measurement.TemperatureUnit.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class QuantityTest {
@@ -101,6 +102,37 @@ public class QuantityTest {
             Quantity<VolumeUnit> thousandMl = new Quantity<>(1000.0, MILLILITRE);
 
             assertEquals(oneLitre, thousandMl);
+        }
+    }
+
+    @Nested
+    @DisplayName("Temperature Equality & Conversions")
+    class TemperatureTests {
+        @Test
+        @DisplayName("Temperature Equality (Fahrenheit, Celsius, Kelvin)")
+        void testTemperatureEquality() {
+            Quantity<TemperatureUnit> absoluteZeroC = new Quantity<>(-273.15, CELSIUS);
+            Quantity<TemperatureUnit> absoluteZeroK = new Quantity<>(0.0, KELVIN);
+            Quantity<TemperatureUnit> iceC = new Quantity<>(0.0, CELSIUS);
+            Quantity<TemperatureUnit> iceF = new Quantity<>(32.0, FAHRENHEIT);
+            Quantity<TemperatureUnit> boilC = new Quantity<>(100.0, CELSIUS);
+            Quantity<TemperatureUnit> boilF = new Quantity<>(212.0, FAHRENHEIT);
+
+            assertEquals(absoluteZeroC, absoluteZeroK);
+            assertEquals(iceC, iceF);
+            assertEquals(boilC, boilF);
+        }
+
+        @Test
+        @DisplayName("Temperature Conversion")
+        void testTemperatureConversion() {
+            Quantity<TemperatureUnit> bodyTempC = new Quantity<>(37.0, CELSIUS);
+            Quantity<TemperatureUnit> bodyTempF = bodyTempC.convertTo(FAHRENHEIT);
+            assertEquals(98.6, bodyTempF.getValue());
+
+            Quantity<TemperatureUnit> kelvinTemp = new Quantity<>(300.0, KELVIN);
+            Quantity<TemperatureUnit> celsiusTemp = kelvinTemp.convertTo(CELSIUS);
+            assertEquals(26.85, celsiusTemp.getValue());
         }
     }
 
