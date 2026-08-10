@@ -13,7 +13,7 @@ An elegant, type-safe, and highly extensible Java-based measurement conversion a
 
 *   🔒 **Compile-Time Type Safety**: Implemented via Java Generics to prevent cross-category operations (e.g., you cannot add weight to volume or compare length with weight).
 *   🔄 **Dynamic Conversions**: A generic conversion engine that normalizes measurements using base unit ratios.
-*   ➕➖➗ **Comprehensive Arithmetic**: Implements Addition, Subtraction (with target unit specification), and Division (calculating dimensionless scalar ratios).
+*   ➗ **Comprehensive Arithmetic**: Implements Addition, Subtraction (with target unit specification), and Division (calculating dimensionless scalar ratios).
 *   🛡️ **Immutable Design**: Instances of measurements are immutable to prevent unintended side effects and ensure thread safety.
 *   🧩 **Polymorphic Enums**: Leverages Java enums implementing strategy interfaces to encapsulate unit conversion factors cleanly.
 *   ⚡ **DRY Refactoring**: Centralized validation, unit scaling, and operator logic using Java's functional `DoubleBinaryOperator` interface to maximize maintainability.
@@ -94,8 +94,8 @@ Completes the arithmetic suite by supporting subtraction (with custom target uni
 *   *Example:* `1.0 Litre - 250 ml = 0.75 Litre`, `1.0 Litre / 250 ml = 4.0` (Scalar ratio)
 
 ### 🔹 UC13: DRY Refactoring & Centralized Arithmetic
-Refactors the arithmetic logic to eliminate code duplication across operations. Exposes a cleaner `Quantity` class utilizing a central validation helper and an internal `ArithmeticOperation` enum powered by functional `DoubleBinaryOperator` lambdas.
-*   *Example:* `1.0 ft + 12.0 in = 2.0 ft` (Delegated to a centralized arithmetic runner with strict category and null validations).
+Exposes a cleaner `Quantity` class utilizing a central validation helper and an internal `ArithmeticOperation` enum.
+*   *Example:* `1.0 ft + 12.0 in = 2.0 ft` (Delegated to a centralized arithmetic runner).
 
 ---
 
